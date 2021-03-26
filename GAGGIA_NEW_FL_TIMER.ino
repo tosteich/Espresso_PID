@@ -28,8 +28,8 @@ int MAX_BOILER_PW;
 char ftp_server[] = "10.0.0.1";
 char ftp_user[]   = "gaggia";
 char ftp_pass[]   = "123";
-const char* ssid = "KKK";
-const char* password = "muzzleoid";
+const char* ssid = "WIFI_NAME";
+const char* password = "WIFI_PASSWORD";
 boolean targetTempWasChanged = true;
 volatile byte wsClients = 0;
 float currentTemperature = 1;
@@ -181,6 +181,7 @@ void loop() {
   }
   heater.updateHeater();
   if (displayTimer.ready()) {
+   //Feature below writing logs on local ftp, disabled
    // updateLog();
     updateInfoToClients();
     redrawDisplay();
