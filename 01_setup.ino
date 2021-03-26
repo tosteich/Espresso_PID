@@ -8,9 +8,9 @@ void setup(void) {
   getPreferenses();
   sensorsTimer.setPeriod(SENSORS_PERIOD);
   heater.setPeriod(MAX_BOILER_PW);
-  regulator.setupPid( preferences.getFloat("pidKp", 145.0),
-                      preferences.getFloat("pidKi", 500.0),
-                      preferences.getFloat("pidKd", 10.),
+  regulator.setupPid( preferences.getFloat("pidKp", 8.0),
+                      preferences.getFloat("pidKi", 0.2),
+                      preferences.getFloat("pidKd", 4.),
                       TARGET_TEMP, SENSORS_PERIOD, MAX_BOILER_PW);
   preferences.end();
 
