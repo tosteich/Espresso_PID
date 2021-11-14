@@ -108,8 +108,8 @@ void giveInitInfoToClient (AsyncWebSocketClient *client) {
 
 void updateInfoToClients () {
   if (wsClients > 0) {
-    char buffer[100];
-    sprintf(buffer, "{\"name\":\"updateInfo\",\"currentTemp\":\"%f\",\"currentPress\":\"%f\",\"currentPower\":\"%u\"}", currentTemperature, currentPressure, heatPower);
+    char buffer[128];
+    sprintf(buffer, "{\"name\":\"updateInfo\",\"currentTemp\":\"%f\",\"currentPress\":\"%f\",\"currentPower\":\"%u\",\"currentTime\":\"%d\"}", currentTemperature, currentPressure, heatPower, currTimeInSec);
     ws.textAll(buffer);
   }
 }
