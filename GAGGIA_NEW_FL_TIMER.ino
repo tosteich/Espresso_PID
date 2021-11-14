@@ -28,8 +28,8 @@ int MAX_BOILER_PW;
 char ftp_server[] = "10.0.0.1";
 char ftp_user[]   = "gaggia";
 char ftp_pass[]   = "123";
-const char* ssid = "WIFI_NAME";
-const char* password = "WIFI_PASSWORD";
+const char* ssid = "KKK";
+const char* password = "muzzleoid";
 boolean targetTempWasChanged = true;
 volatile byte wsClients = 0;
 float currentTemperature = 1;
@@ -37,6 +37,8 @@ float currentPressure = 0;
 int heatPower;
 boolean timeToCheckCounter = false;
 boolean flowButtonIsPressed = false;
+long resetTime = 0;
+long currTimeInSec = 0;
 
 
 TFT_eSPI tft = TFT_eSPI();
@@ -116,6 +118,7 @@ class StopWatch {
         } else if ( flowJustPressed ) {
           sendWsMessage ();
           flowJustPressed = false;
+          resetTime = currTime;
         }
       } else {
         if (memoryTimer == 0) {
@@ -157,7 +160,6 @@ class StopWatch {
     boolean getFlowJustPressed () {
       return flowJustPressed;
     }
-
 };
 
 StopWatch stopWatch;
@@ -181,9 +183,28 @@ void loop() {
   }
   heater.updateHeater();
   if (displayTimer.ready()) {
-   //Feature below writing logs on local ftp, disabled
    // updateLog();
+    currTimeInSec = (millis() - resetTime) / 1000;
     updateInfoToClients();
     redrawDisplay();
+    drawTime();
   }
+}
+
+  void drawTime() {
+  tft.setTextColor(TFT_GREY, TFT_BLACK);
+  byte seconds = currTimeInSec % 60;
+  byte minutes = currTimeInSec / 60;
+  byte posX = 60;
+  byte posY = 194;
+  byte fontSize = 4;
+  if (minutes < 10) {
+    posX += tft.drawChar('0', posX, posY, fontSize);
+  }
+  posX += tft.drawNumber(minutes, posX, posY, fontSize);
+  posX += tft.drawChar(':', posX, posY, fontSize);
+  if (seconds < 10) {
+    posX += tft.drawChar('0', posX, posY, fontSize);
+  }
+  tft.drawNumber(seconds, posX, posY, fontSize);
 }
