@@ -8,9 +8,9 @@ void setup(void) {
   getPreferenses();
   sensorsTimer.setPeriod(SENSORS_PERIOD);
   heater.setPeriod(MAX_BOILER_PW);
-  regulator.setupPid( preferences.getFloat("pidKp", 8.0),
-                      preferences.getFloat("pidKi", 0.2),
-                      preferences.getFloat("pidKd", 4.),
+  regulator.setupPid( preferences.getFloat("pidKp", 6.0),  //Settings of PID Kp
+                      preferences.getFloat("pidKi", 0.2),  //Settings of PID Ki
+                      preferences.getFloat("pidKd", 9.),   //Settings of PID Kd
                       TARGET_TEMP, SENSORS_PERIOD, MAX_BOILER_PW);
   preferences.end();
 
@@ -46,7 +46,7 @@ void setup(void) {
 }
 
 void getPreferenses () {
-  TARGET_TEMP = preferences.getInt("targetTemp", 24);
+  TARGET_TEMP = preferences.getInt("targetTemp", 24);    //Settings of target tamperature
   SENSORS_PERIOD = preferences.getInt("sensorsPeriod", 200);
   MAX_BOILER_PW = preferences.getInt("boilerMaxPower", 1000);
 }
