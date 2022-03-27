@@ -28,8 +28,8 @@ int MAX_BOILER_PW;
 char ftp_server[] = "10.0.0.1";
 char ftp_user[]   = "gaggia";
 char ftp_pass[]   = "123";
-const char* ssid = "KKK";
-const char* password = "muzzleoid";
+const char* ssid = "yourHomeWiFiName"; //Name of your home Wi-Fi
+const char* password = "yourHomeWiFiPassword";   //Password of your home Wi-Fi
 boolean targetTempWasChanged = true;
 volatile byte wsClients = 0;
 float currentTemperature = 1;
@@ -89,6 +89,22 @@ class StopWatch {
       }
     }
 
+    void printCurrentTime () {
+        byte posX = 146, posY = 192, fontSize = 7;
+        tft.setTextColor(TFT_GREY, TFT_BLACK);
+        byte seconds = currTimeInSec % 60;
+        byte minutes = currTimeInSec / 60;
+        if (minutes < 10) {
+          posX += tft.drawChar('0', posX, posY, fontSize);
+        }
+        posX += tft.drawNumber(minutes, posX, posY, fontSize);
+        posX += tft.drawChar(':', posX, posY, fontSize);
+        if (seconds < 10) {
+          posX += tft.drawChar('0', posX, posY, fontSize);
+        }
+        tft.drawNumber(seconds, posX, posY, fontSize);
+    }
+
     void sendWsMessage () {
       if (wsClients > 0) {
         char buffer[100];
@@ -115,7 +131,7 @@ class StopWatch {
         printTime(posX, posY, fontSize);
         if (flowTickCounter % 2 == 0) {
           sendWsMessage ();
-        } else if ( flowJustPressed ) {
+        } else if (flowJustPressed) {
           sendWsMessage ();
           flowJustPressed = false;
           resetTime = currTime;
@@ -138,11 +154,16 @@ class StopWatch {
           memoryTimer++;
         } else if (memoryTimer == 40) {
           timerTime = 0;
-          tft.setTextColor(TFT_GREY, TFT_BLACK);
-          posX += tft.drawString("00.00", posX, posY, fontSize);
+          printCurrentTime();
           sendWsMessage ();
           memoryTimer++;
         }
+      }
+    }
+
+    void printTimerTime() {
+      if (memoryTimer > 40) {
+        printCurrentTime();
       }
     }
     void setIsFlow (boolean isFlow) {
@@ -187,7 +208,7 @@ void loop() {
     currTimeInSec = (millis() - resetTime) / 1000;
     updateInfoToClients();
     redrawDisplay();
-    drawTime();
+    stopWatch.printTimerTime();
   }
 }
 
